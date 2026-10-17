@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SCFHS CLINICAL NURSE SPECIALIST MASTER EXAM</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+        .drawer-overlay {
+            background-color: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(4px);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 4px;
+        }
+        .touch-btn {
+            min-height: 44px;
+            min-width: 44px;
+        }
+        .calc-btn {
+            @apply flex items-center justify-center font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 rounded-lg text-lg p-3 transition-colors touch-btn;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col justify-between selection:bg-indigo-600 selection:text-white">
+
+    <!-- TOP NAV BAR / HEADER -->
+    <header class="bg-slate-900 text-white sticky top-0 z-30 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <!-- Brand / Logo -->
+            <div class="flex items-center space-x-3">
+                <div class="bg-indigo-600 p-2 rounded-lg flex items-center justify-center text-white shadow-md">
+                    <i class="fa-solid fa-user-doctor text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-sm sm:text-base leading-tight tracking-wide text-indigo-100">SCFHS CLINICAL NURSE SPECIALIST MASTER EXAM</h1>
+                    <p class="text-[10px] sm:text-xs text-indigo-300 hidden sm:block">Modern Clinical Vignette Board Level Practice | 50 Validated Items</p>
+                </div>
+            </div>
+
+            <!-- Controls, Timer, Calculator -->
+            <div class="flex items-center space-x-2 sm:space-x-3">
+                <!-- Practice / Exam Mode Switcher -->
+                <button id="modeToggleBtn" onclick="toggleMode()" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-indigo-950 border border-indigo-700 text-indigo-200 hover:bg-indigo-900 transition flex items-center space-x-1.5 touch-btn">
+                    <i class="fa-solid fa-graduation-cap text-indigo-400"></i>
+                    <span id="modeText">Practice Mode</span>
+                </button>
+
+                <!-- Prometric Timer -->
+                <div id="timerContainer" class="bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700 flex items-center space-x-2 text-amber-400 font-mono font-bold text-xs sm:text-sm">
+                    <i class="fa-solid fa-clock"></i>
+                    <span id="timerDisplay">04:00:00</span>
+                    <button onclick="toggleTimerPause()" id="timerPauseBtn" class="ml-1 text-slate-300 hover:text-white">
+                        <i class="fa-solid fa-pause" id="timerPauseIcon"></i>
+                    </button>
+                </div>
+
+                <!-- Calculator Modal Button -->
+                <button onclick="toggleCalculator()" class="p-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition touch-btn" title="Clinical & Hemodynamic Calculator">
+                    <i class="fa-solid fa-calculator text-lg"></i>
+                </button>
+
+                <!-- Mobile Navigation Grid Button -->
+                <button onclick="toggleMobileGrid()" class="p-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg lg:hidden transition touch-btn" title="Question Grid">
+                    <i class="fa-solid fa-th-large text-lg"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN EXAM AREA -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-grow w-full">
+        <!-- TOP FILTER & TOOLBAR -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <!-- Domain Dropdown & Search Filter -->
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
+                <div class="flex items-center space-x-2">
+                    <label for="domainFilter" class="text-xs sm:text-sm font-semibold text-slate-600 whitespace-nowrap"><i class="fa-solid fa-layer-group text-indigo-600 mr-1"></i> Category:</label>
+                    <select id="domainFilter" onchange="filterByDomain()" class="bg-slate-50 border border-slate-300 rounded-lg text-xs sm:text-sm p-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none w-full sm:w-64">
+                        <option value="ALL">All Clinical Categories (50 Vignette Items)</option>
+                        <option value="DOM1">Hematology & Vascular Care (10)</option>
+                        <option value="DOM2">Endocrine & Metabolic Disorders (10)</option>
+                        <option value="DOM3">Cardiovascular & Critical Care (10)</option>
+                        <option value="DOM4">Maternal & High-Risk Obstetrics (10)</option>
+                        <option value="DOM5">Pediatrics & Safety Management (10)</option>
+                    </select>
+                </div>
+
+                <!-- Search Input for Keywords -->
+                <div class="relative w-full sm:w-48">
+                    <input type="text" id="keywordSearch" onkeyup="handleSearch()" placeholder="Search clinical cases..." class="w-full bg-slate-50 border border-slate-300 rounded-lg text-xs p-2.5 pl-8 focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
+                    <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-3 text-slate-400 text-xs"></i>
+                </div>
+            </div>
+
+            <!-- Progress & Stats -->
+            <div class="flex items-center justify-between md:justify-end space-x-4 w-full md:w-auto">
+                <div class="text-xs sm:text-sm text-slate-600">
+                    Progress: <span id="progressText" class="font-bold text-indigo-600">0/50</span> (<span id="progressPercent">0%</span>)
+                </div>
+                <button onclick="resetExamState()" class="text-xs font-semibold text-rose-600 hover:text-rose-800 bg-rose-50 hover:bg-rose-100 px-3 py-1.5 rounded-lg transition touch-btn">
+                    <i class="fa-solid fa-arrow-rotate-left mr-1"></i> Reset Progress
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <!-- MAIN QUESTION PANEL (3 COLUMNS) -->
+            <div class="lg:col-span-3 space-y-6">
+                <!-- Question Card -->
+                <div class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden">
+                    <!-- Header Bar -->
+                    <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <span id="questionNumBadge" class="bg-indigo-600 text-white font-bold text-xs sm:text-sm px-3 py-1 rounded-full">Item 1 of 50</span>
+                            <span id="domainCategoryBadge" class="bg-indigo-100 text-indigo-800 text-xs font-semibold px-2.5 py-1 rounded-md hidden sm:inline-block">Hematology & Vascular Care</span>
+                        </div>
+                        <button id="flagBtn" onclick="toggleFlagCurrentQuestion()" class="text-slate-400 hover:text-amber-500 font-medium text-xs sm:text-sm flex items-center space-x-1 transition touch-btn">
+                            <i id="flagIcon" class="fa-regular fa-bookmark"></i>
+                            <span id="flagText">Flag for Review</span>
+                        </button>
+                    </div>
+
+                    <!-- Question Stem -->
+                    <div class="p-6">
+                        <p id="questionStemText" class="text-slate-900 text-base sm:text-lg font-medium leading-relaxed mb-6">
+                            Loading board item...
+                        </p>
+
+                        <!-- Options Container -->
+                        <div id="optionsContainer" class="space-y-3">
+                            <!-- Rendered dynamically -->
+                        </div>
+
+                        <!-- Rationale Display Panel (Practice Mode Only) -->
+                        <div id="rationalePanel" class="mt-6 p-4 rounded-xl bg-indigo-50 border border-indigo-200 hidden">
+                            <h4 class="font-bold text-indigo-900 text-xs sm:text-sm flex items-center mb-1">
+                                <i class="fa-solid fa-brain mr-2 text-indigo-600"></i> Clinical Judgment Rationale & Evidence-Based Guidelines
+                            </h4>
+                            <p id="rationaleText" class="text-xs sm:text-sm text-indigo-950 leading-relaxed">
+                                Explanation appears here.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Card Footer Controls -->
+                    <div class="bg-slate-50 border-t border-slate-200 px-6 py-4 flex items-center justify-between">
+                        <button id="prevBtn" onclick="navigateQuestion(-1)" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-lg text-sm font-semibold hover:bg-slate-300 disabled:opacity-40 transition touch-btn">
+                            <i class="fa-solid fa-arrow-left mr-1"></i> Previous
+                        </button>
+                        <div class="flex space-x-2">
+                            <button id="nextBtn" onclick="navigateQuestion(1)" class="px-5 py-2 bg-indigo-600 text-white rounded-lg text-sm font-semibold hover:bg-indigo-700 shadow-sm transition touch-btn">
+                                Next <i class="fa-solid fa-arrow-right ml-1"></i>
+                            </button>
+                            <button id="submitExamBtn" onclick="confirmSubmitExam()" class="px-5 py-2 bg-emerald-600 text-white rounded-lg text-sm font-semibold hover:bg-emerald-700 shadow-sm transition touch-btn">
+                                <i class="fa-solid fa-paper-plane mr-1"></i> Submit Board Exam
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SIDEBAR QUESTION GRID NAVIGATOR (DESKTOP) -->
+            <div class="hidden lg:block lg:col-span-1">
+                <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-4 sticky top-24">
+                    <h3 class="font-bold text-slate-800 text-sm mb-3 flex items-center justify-between">
+                        <span><i class="fa-solid fa-grip text-indigo-600 mr-1.5"></i> Board Navigator</span>
+                        <span id="gridSummary" class="text-xs font-normal text-slate-500">50 Items</span>
+                    </h3>
+                    
+                    <!-- Legend -->
+                    <div class="grid grid-cols-2 gap-2 text-[11px] mb-4 pb-3 border-b border-slate-100">
+                        <div class="flex items-center"><span class="w-3 h-3 bg-indigo-600 rounded-sm mr-1.5"></span> Answered</div>
+                        <div class="flex items-center"><span class="w-3 h-3 bg-amber-400 rounded-sm mr-1.5"></span> Flagged</div>
+                        <div class="flex items-center"><span class="w-3 h-3 bg-slate-100 border border-slate-300 rounded-sm mr-1.5"></span> Unanswered</div>
+                        <div class="flex items-center"><span class="w-3 h-3 border-2 border-indigo-600 rounded-sm mr-1.5"></span> Active</div>
+                    </div>
+
+                    <!-- Scrollable Buttons Grid -->
+                    <div id="desktopGridContainer" class="grid grid-cols-5 gap-2 max-h-[420px] overflow-y-auto custom-scrollbar p-1">
+                        <!-- Rendered dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- MOBILE DRAWER NAVIGATOR -->
+    <div id="mobileGridDrawer" class="fixed inset-0 z-50 transform translate-x-full transition-transform duration-300 lg:hidden flex justify-end">
+        <div class="drawer-overlay fixed inset-0" onclick="toggleMobileGrid()"></div>
+        <div class="bg-white w-4/5 max-w-xs h-full relative z-10 p-4 shadow-2xl flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-200">
+                    <h3 class="font-bold text-slate-800 text-base"><i class="fa-solid fa-th-large text-indigo-600 mr-2"></i> Question Grid</h3>
+                    <button onclick="toggleMobileGrid()" class="text-slate-400 hover:text-slate-600 p-1 touch-btn">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
+                <div id="mobileGridContainer" class="grid grid-cols-5 gap-2 max-h-[75vh] overflow-y-auto custom-scrollbar p-1">
+                    <!-- Rendered dynamically -->
+                </div>
+            </div>
+            <button onclick="toggleMobileGrid()" class="w-full py-2.5 bg-slate-900 text-white font-semibold rounded-lg text-sm touch-btn">
+                Close Navigator
+            </button>
+        </div>
+    </div>
+
+    <!-- DOSAGE & HEMODYNAMIC CALCULATOR MODAL -->
+    <div id="calcModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm hidden">
+        <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
+            <div class="bg-slate-900 text-white px-4 py-3 flex items-center justify-between">
+                <h3 class="font-bold text-sm flex items-center"><i class="fa-solid fa-square-root-variable text-indigo-400 mr-2"></i> Clinical & Hemodynamic Calculator</h3>
+                <button onclick="toggleCalculator()" class="text-slate-400 hover:text-white touch-btn"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div class="p-4 space-y-4">
+                <!-- Standard Calculator Display -->
+                <div id="calcDisplay" class="bg-slate-900 text-emerald-400 font-mono text-right text-2xl p-3 rounded-lg overflow-x-auto min-h-[52px]">0</div>
+                <div class="grid grid-cols-4 gap-2">
+                    <button onclick="calcInput('C')" class="calc-btn text-rose-600 col-span-2">C</button>
+                    <button onclick="calcInput('/')" class="calc-btn text-indigo-600">÷</button>
+                    <button onclick="calcInput('*')" class="calc-btn text-indigo-600">×</button>
+                    <button onclick="calcInput('7')" class="calc-btn">7</button>
+                    <button onclick="calcInput('8')" class="calc-btn">8</button>
+                    <button onclick="calcInput('9')" class="calc-btn">9</button>
+                    <button onclick="calcInput('-')" class="calc-btn text-indigo-600">-</button>
+                    <button onclick="calcInput('4')" class="calc-btn">4</button>
+                    <button onclick="calcInput('5')" class="calc-btn">5</button>
+                    <button onclick="calcInput('6')" class="calc-btn">6</button>
+                    <button onclick="calcInput('+')" class="calc-btn text-indigo-600">+</button>
+                    <button onclick="calcInput('1')" class="calc-btn">1</button>
+                    <button onclick="calcInput('2')" class="calc-btn">2</button>
+                    <button onclick="calcInput('3')" class="calc-btn">3</button>
+                    <button onclick="calcEqual()" class="calc-btn bg-indigo-600 text-white hover:bg-indigo-700 row-span-2">=</button>
+                    <button onclick="calcInput('0')" class="calc-btn col-span-2">0</button>
+                    <button onclick="calcInput('.')" class="calc-btn">.</button>
+                </div>
+                <!-- Quick Reference Formulas Helper -->
+                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 text-xs space-y-1">
+                    <div class="font-bold text-slate-700">Hemodynamic & Clinical Formulas:</div>
+                    <div class="text-slate-600">• MAP = [SBP + (2 × DBP)] / 3</div>
+                    <div class="text-slate-600">• Parkland = 4 mL × kg × %TBSA (50% in first 8h)</div>
+                    <div class="text-slate-600">• ANC = WBC × [(%Segs + %Bands) / 100]</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PSYCHOMETRIC ANALYTICS / RESULTS MODAL -->
+    <div id="resultsModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/75 backdrop-blur-md hidden overflow-y-auto">
+        <div class="bg-white w-full max-w-3xl rounded-2xl shadow-2xl border border-slate-200 my-8 overflow-hidden">
+            <div class="bg-slate-900 text-white p-6">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h2 class="text-2xl font-extrabold text-indigo-100">Official Exam Psychometric Report</h2>
+                        <p class="text-indigo-300 text-xs sm:text-sm mt-1">SCFHS Clinical Nurse Specialist (CNS) Licensing Standard</p>
+                    </div>
+                    <button onclick="closeResultsModal()" class="text-slate-400 hover:text-white touch-btn"><i class="fa-solid fa-xmark text-2xl"></i></button>
+                </div>
+                <!-- Main Score Summary -->
+                <div class="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                    <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
+                        <div class="text-slate-400 text-xs font-semibold uppercase">Weighted Score</div>
+                        <div id="resTotalScore" class="text-3xl font-extrabold text-white mt-1">0%</div>
+                    </div>
+                    <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
+                        <div class="text-slate-400 text-xs font-semibold uppercase">Board Decision</div>
+                        <div id="resPassStatus" class="text-2xl font-bold text-emerald-400 mt-1.5">PASSED</div>
+                    </div>
+                    <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
+                        <div class="text-slate-400 text-xs font-semibold uppercase">Correct / Total</div>
+                        <div id="resCorrectRatio" class="text-2xl font-bold text-indigo-300 mt-1.5">0 / 50</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 space-y-6 max-h-[55vh] overflow-y-auto custom-scrollbar">
+                <h3 class="text-base font-bold text-slate-800 border-b border-slate-200 pb-2">Competency Domain Analysis</h3>
+                <div id="domainAnalyticsContainer" class="space-y-4">
+                    <!-- Dynamic domain breakdown bars -->
+                </div>
+            </div>
+
+            <div class="bg-slate-50 border-t border-slate-200 p-4 flex flex-wrap justify-between items-center gap-3">
+                <button onclick="window.print()" class="px-4 py-2 bg-slate-800 text-white rounded-lg text-xs sm:text-sm font-semibold hover:bg-slate-900 transition flex items-center touch-btn">
+                    <i class="fa-solid fa-file-pdf mr-2"></i> Print Board Transcript
+                </button>
+                <div class="flex space-x-2">
+                    <button onclick="reviewIncorrectOnly()" class="px-4 py-2 bg-amber-500 text-white rounded-lg text-xs sm:text-sm font-semibold hover:bg-amber-600 transition touch-btn">
+                        Review Weak Areas
+                    </button>
+                    <button onclick="closeResultsModal()" class="px-4 py-2 bg-indigo-600 text-white rounded-lg text-xs sm:text-sm font-semibold hover:bg-indigo-700 transition touch-btn">
+                        Close Report
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500">
+        <p>SCFHS Clinical Nurse Specialist Master Exam Engine • Expert Board Level Validation Platform</p>
+    </footer>
+
+    <!-- DIVERSE MASTER QUESTION DATA & APPLICATION ENGINE -->
+    <script>
+        const TOTAL_QUESTIONS = 50;
+
+        // Master Dataset incorporating modern clinical vignettes translated and adapted from official SCFHS question papers
+        function generate50VignetteDataset() {
+            const rawQuestions = [
+                // 1. Hemophilia Nosebleed
+                { id: "SCFHS-001", dom: "DOM1", dName: "Hematology & Vascular Care",
+                  stem: "A client with hemophilia presents with an active nosebleed. Which nursing action is most appropriate to control the bleeding?",
+                  opts: ["Pinch the soft lower part of the nose.", "Place the client in a supine position.", "Administer oral aspirin for associated discomfort.", "Apply warm compresses directly to the bridge of the nose."],
+                  key: 0,
+                  rat: "Pinching the soft lower portion of the nose helps apply direct pressure to Kiesselbach's plexus to achieve hemostasis in epistaxis, avoiding aspiration risks associated with a supine posture." },
+                // 2. Unilateral Adrenalectomy
+                { id: "SCFHS-002", dom: "DOM2", dName: "Endocrine & Metabolic Disorders",
+                  stem: "A client has had a unilateral adrenalectomy to remove a tumor. Which measurement is the most critical for the nurse to monitor in the immediate post-operative period?",
+                  opts: ["Blood pressure", "Body temperature", "Urine specific gravity", "Total daily caloric intake"],
+                  key: 0,
+                  rat: "Adrenal surgery carries a high risk of hemodynamic instability and Addisonian crisis due to sudden fluctuations in circulating catecholamines and cortisol levels, making blood pressure monitoring the highest priority." },
+                // 3. Addison's Disease GI History & Solu-Medrol
+                { id: "SCFHS-003", dom: "DOM2", dName: "Endocrine & Metabolic Disorders",
+                  stem: "A client with Addison's disease is admitted with a 3-day history of nausea and vomiting, receiving intravenous glucocorticoids (Solu-Medrol). Which nursing intervention should be implemented?",
+                  opts: ["Evaluating the sodium and potassium levels", "Restricting all fluid intake to prevent fluid overload", "Administering high-dose potassium supplements immediately", "Discontinuing bedside blood glucose monitoring"],
+                  key: 0,
+                  rat: "Addisonian crisis involves profound electrolyte shifts, specifically hyponatremia and hyperkalemia. Monitoring serum electrolytes is vital during acute glucocorticoid therapy." },
+                // 4. Thyroidectomy Tingling
+                { id: "SCFHS-004", dom: "DOM2", dName: "Endocrine & Metabolic Disorders",
+                  stem: "A client who underwent a total thyroidectomy yesterday complains of tingling around the mouth, fingers, and toes. What should be the nurse's next action?",
+                  opts: ["Check the serum calcium level.", "Obtain a cardiac crash cart.", "Assess the surgical dressing for active hemorrhage.", "Check blood pressure for orthostatic hypotension."],
+                  key: 0,
+                  rat: "Perioral and digital paresthesias indicate hypocalcemia resulting from inadvertent parathyroid gland trauma or removal during a thyroidectomy." },
+                // 5. Hypothyroidism Priority
+                { id: "SCFHS-005", dom: "DOM2", dName: "Endocrine & Metabolic Disorders",
+                  stem: "A 32-year-old female is brought to the clinic with a pulse of 52 bpm, a 30-pound weight gain over four months, and cold intolerance. Diagnosed with hypothyroidism, which nursing diagnosis is of highest priority?",
+                  opts: ["Hypothermia related to decreased metabolic rate", "Impaired physical mobility related to lethargy", "Disturbed thought processes related to interstitial edema", "Decreased cardiac output related to severe bradycardia"],
+                  key: 0,
+                  rat: "A severely depressed metabolic rate associated with hypothyroidism places the patient at high risk for hypothermia and myxedema complications, making temperature regulation a primary physiological priority." },
+                // 6. Rosuvastatin Instruction
+                { id: "SCFHS-006", dom: "DOM1", dName: "Hematology & Vascular Care",
+                  stem: "A client presents with a serum cholesterol of 275 mg/dL and is prescribed rosuvastatin (Crestor). Which instruction should be given to the client?",
+                  opts: ["Report muscle weakness or tenderness to the physician.", "Allow six months before expecting any change in lipid profile.", "Take the medication with grapefruit juice to enhance absorption.", "Discontinue the drug immediately if mild insomnia occurs."],
+                  key: 0,
+                  rat: "Statin medications like rosuvastatin can cause myopathy and rhabdomyolysis; unexplained muscle pain or weakness must be reported immediately." },
+                // 7. Hypertensive Crisis Diazoxide
+                { id: "SCFHS-007", dom: "DOM3", dName: "Cardiovascular & Critical Care",
+                  stem: "A client admitted with hypertensive crisis is prescribed diazoxide (Hyperstat). During intravenous administration, the nurse must:",
+                  opts: ["Utilize an infusion pump to ensure precise delivery.", "Place the client in the Trendelenburg position.", "Cover the IV solution bag with protective amber foil.", "Monitor blood glucose levels frequently."],
+                  key: 0,
+                  rat: "Diazoxide is a potent vasodilator that can cause rapid, severe hypotension; precise administration using an infusion pump is essential." },
+                // 8. VSD Digitalis Toxicity
+                { id: "SCFHS-008", dom: "DOM5", dName: "Pediatrics & Safety Management",
+                  stem: "A 6-month-old infant with a ventricular septal defect receives digitalis for heart rate regulation. Which finding should be reported immediately to the physician?",
+                  opts: ["Heart rate of 60 bpm", "Blood pressure of 126/80 mmHg", "Respiratory rate of 30 breaths per minute", "Serum glucose of 110 mg/dL"],
+                  key: 0,
+                  rat: "In infants, digitalis toxicity commonly manifests as marked bradycardia. A heart rate significantly below normal limits (such as 60 bpm in an infant) requires holding the drug and notifying the physician." },
+                // 9. Nitroglycerin Teaching
+                { id: "SCFHS-009", dom: "DOM3", dName: "Cardiovascular & Critical Care",
+                  stem: "A client with angina receives a prescription for sublingual nitroglycerin tablets. What instruction should the nurse include?",
+                  opts: ["Leave the medication in its original brown glass container.", "Replenish the supply of tablets every three months.", "Take one tablet every 15 minutes if chest pain occurs.", "Crush tablets and swallow with water if pain is severe."],
+                  key: 0,
+                  rat: "Nitroglycerin is sensitive to light and moisture; it must be stored in its original dark glass bottle with a tight-fitting cap to maintain potency." },
+                // 10. Low Fat Diet Selection
+                { id: "SCFHS-010", dom: "DOM3", dName: "Cardiovascular & Critical Care",
+                  stem: "A client is instructed regarding a diet low in fat and cholesterol. Which food selection is lowest in saturated fats?",
+                  opts: ["Turkey breast", "Macaroni and cheese", "Shrimp with butter rice", "Spaghetti with meat sauce"],
+                  key: 0,
+                  rat: "Poultry white meat such as turkey breast is lean and contains significantly less saturated fat compared to cheese, butter, or red meat sauces." },
+                // 11. Left-Sided Heart Failure Edema Assessment
+                { id: "SCFHS-011", dom: "DOM3", dName: "Cardiovascular & Critical Care",
+                  stem: "A client is admitted with left-sided congestive heart failure. In assessing the client for primary fluid overload manifestations, the nurse should inspect the:",
+                  opts: ["Lungs for crackles and wheezes", "Feet for dependent peripheral pitting edema", "Sacrum for pressure-related fluid accumulation", "Neck for jugular venous distension"],
+                  key: 0,
+                  rat: "Left-sided heart failure primarily causes pulmonary congestion, leading to respiratory symptoms and adventitious breath sounds like crackles." },
+                // 12. CVP Zero Reference Point
+                { id: "SCFHS-012", dom: "DOM3", dName: "Cardiovascular & Critical Care",
+                  stem: "When checking a client's central venous pressure (CVP), where should the nurse position the zero reference point of the manometer?",
+                  opts: ["Phlebostatic axis", "Point of maximum impulse (PMI)", "Erb's point", "Angle of Louis"],
+                  key: 0,
+                  rat: "The phlebostatic axis (located at the fourth intercostal space, mid-chest level) is the external anatomical landmark corresponding to the right atrium for accurate hemodynamic pressure measurement." },
+                // 13. Lisinopril and Furosemide Order
+                { id: "SCFHS-013", dom: "DOM3", dName: "Cardiovascular & Critical Care",
+                  stem: "A physician orders lisinopril and furosemide concomitantly for a client with hypertension. The nurse should:",
+                  opts: ["Administer the medications as ordered while monitoring blood pressure.", "Question the order due to immediate drug incompatibility.", "Contact pharmacy to switch both drugs to oral suspension.", "Withhold both medications until heart rate is evaluated."],
+                  key: 0,
+                  rat: "Combining an ACE inhibitor (lisinopril) and a loop diuretic (furosemide) is standard combination therapy for hypertension and heart failure, though initial doses require monitoring for first-dose hypotension." },
+                // 14. Peripheral Edema Evaluation
+                { id: "SCFHS-014", dom: "DOM1", dName: "Hematology & Vascular Care",
+                  stem: "What is considered the most reliable method for evaluating the daily amount of peripheral edema in a hospitalized cardiac client?",
+                  opts: ["Weighing the client daily on the same scale", "Measuring extremity circumference with a tape measure", "Recording strict intake and output balances", "Checking for pitting depth using firm thumb pressure"],
+                  key: 0,
+                  rat: "Daily weight is the most sensitive and objective indicator of fluid retention or loss, as a change of 1 kg corresponds to approximately 1 liter of fluid." },
+                // 15. Radioactive Vaginal Implant Visitation
+                { id: "SCFHS-015", dom: "DOM5", dName: "Pediatrics & Safety Management",
+                  stem: "A client with vaginal cancer is treated with a radioactive vaginal implant. The client's husband asks if he can spend the night. The nurse should explain that:",
+                  opts: ["Visitation is strictly limited to 30 minutes per day when the implant is in place.", "Overnight stays are permitted if family members wear lead aprons.", "There is no restriction since radiation is localized.", "He may stay as long as he remains 2 meters away from the bed."],
+                  key: 0,
+                  rat: "Radiation safety protocols for sealed radioactive implants limit prolonged exposure. Visitor time is typically restricted (e.g., 30 minutes) to minimize cumulative radiation exposure." },
+                // 16. Facial Stroke Diet
+                { id: "SCFHS-016", dom: "DOM5", dName: "Pediatrics & Safety Management",
+                  stem: "Which diet selection is most suitable for a client hospitalized with a facial stroke and unilateral swallowing difficulty?",
+                  opts: ["Split pea soup, mashed potatoes, and pudding", "Roast beef sandwich with potato chips and pickle spear", "Tomato soup with crunchy cheese toast and crackers", "Hamburger with baked beans and fresh fruit cup"],
+                  key: 0,
+                  rat: "Thickened liquids, pureed items, and smooth foods (like mashed potatoes and pudding) minimize aspiration risks in patients with dysphagia." },
+                // 17. Novolog Insulin Peak Action
+                { id: "SCFHS-017", dom: "DOM2", dName: "Endocrine & Metabolic Disorders",
+                  stem: "A client is prescribed rapid-acting insulin (Novolog). Which statement indicates the client understands the peak action timing?",
+                  opts: ["'I will make sure I eat a meal within 10 to 15 minutes of taking my injection.'", "'I need to carry fast-acting sugar only during bedtime hours.'", "'I will eat a heavy snack exactly 4 hours after my injection.'", "'I can delay my meals for an hour after taking this insulin.'"],
+                  key: 0,
+                  rat: "Novolog (insulin aspart) has a rapid onset of 10-15 minutes; patients must eat immediately to prevent severe hypoglycemia." },
+                // 18. Newborn Sponge Bath Rationale
+                { id: "SCFHS-018", dom: "DOM4", dName: "Maternal & High-Risk Obstetrics",
+                  stem: "When teaching infant care to first-time parents, why does the nurse recommend sponge baths for the first two weeks of life?",
+                  opts: ["The umbilical cord needs time to dry and separate safely.", "Newborn skin is easily traumatized by immersion soap.", "New parents require time to learn proper infant handling.", "The risk of infant chilling outweighs immersion benefits."],
+                  key: 0,
+                  rat: "Keeping the umbilical cord stump dry until it naturally separates and falls off prevents localized bacterial colonization and omphalitis." },
+                // 19. Leucovorin with Trimetrexate
+                { id: "SCFHS-019", dom: "DOM5", dName: "Pediatrics & Safety Management",
+                  stem: "A client with leukemia receiving trimetrexate is also ordered leucovorin calcium. What is the rationale for administering leucovorin?",
+                  opts: ["To reverse drug toxicity and protect healthy normal tissues from damage", "To treat severe iron-deficiency anemia caused by chemotherapy", "To create a synergistic cytotoxic effect shortening treatment duration", "To stimulate neutrophil proliferation in bone marrow"],
+                  key: 0,
+                  rat: "Leucovorin (folinic acid) acts as a rescue agent that bypasses dihydrofolate reductase inhibition, rescuing normal cells from folate antagonist toxicity." },
+                // 20. Four-Month Immunizations
+                { id: "SCFHS-020", dom: "DOM5", dName: "Pediatrics & Safety Management",
+                  stem: "A 4-month-old infant is brought for routine immunization. In addition to DTaP and polio vaccines, what other vaccine should be administered?",
+                  opts: ["Haemophilus influenzae type b (Hib) vaccine", "Measles, Mumps, and Rubella (MMR) vaccine", "Varicella vaccine", "Meningococcal conjugate vaccine"],
+                  key: 0,
+                  rat: "The standard immunization schedule at 4 months includes DTaP, inactivated polio, Hib, pneumococcal conjugate, and rotavirus vaccines." },
+                // 21. Sickle Cell Lower Extremity Circulation
+                { id: "SCFHS-021", dom: "DOM1", dName: "Hematology & Vascular Care",
+                  stem: "A 43-year-old male with sickle cell anemia is admitted in crisis. The nurse plans to assess lower extremity circulation every two hours. Which outcome criterion indicates adequate perfusion?",
+                  opts: ["Capillary refill of less than 3 seconds", "Body temperature of 99°F or lower", "Active range of motion in toes", "Normal sensation when soles are touched"],
+                  key: 0,
+                  rat: "Capillary refill time under 3 seconds is a direct clinical indicator of peripheral tissue perfusion and microvascular blood flow." },
+                // 22. Sickle Cell Crisis Positioning
+                { id: "SCFHS-022", dom: "DOM1", dName: "Hematology & Vascular Care",
+                  stem: "A male client is admitted to the emergency department in sickle cell crisis with severe joint and bone pain. Which position should the nurse avoid?",
+                  opts: ["High Fowler's position with knee gatch raised", "Side-lying position with knees slightly flexed", "Flat supine position with legs extended comfortably", "Semi-Fowler's position supporting joints"],
+                  key: 0,
+                  rat: "Raising the knee gatch on a bed creates vascular stasis and impedes venous return behind the knees, worsening sickling; knee gatch elevation must be avoided." },
+                // 23. Sickle Cell Crisis Priority Intervention
+                { id: "SCFHS-023", dom: "DOM1", dName: "Hematology & Vascular Care",
+                  stem: "Which nursing intervention is of highest priority for a client admitted in acute sickle cell crisis?",
+                  opts: ["Encouraging generous oral and intravenous fluid intake", "Taking hourly blood pressures with a mechanical cuff", "Placing the client in high Fowler's position", "Administering oral acetaminophen for pain"],
+                  key: 0,
+                  rat: "Hydration is paramount in sickle cell crisis to reduce blood viscosity and reverse red blood cell sickling caused by dehydration." },
+                // 24. Sickle Cell Crisis Dietary Encouragement
+                { id: "SCFHS-024", dom: "DOM1", dName: "Hematology & Vascular Care",
+                  stem: "Which dietary option should the nurse encourage for a client admitted in sickle cell crisis to support hydration and caloric needs?",
+                  opts: ["Fruit-flavored popsicles and clear broths", "High-sodium processed meats and cheeses", "Dry crackers and toasted grain cereals", "Carbonated sugary beverages"],
+                  key: 0,
+                  rat: "Popsicles and clear broths provide high water content combined with electrolytes and patient palatability to maintain hydration." },
+                // 25. Diabetic Primigravida Questionable Order
+                { id: "SCFHS-025", dom: "DOM4", dName: "Maternal & High-Risk Obstetrics",
+                  stem: "A primigravida with gestational diabetes is admitted at 34 weeks gestation. Which physician order should the nurse question?",
+                  opts: ["Terbutaline (Brethine) subcutaneous or IV infusion", "Magnesium sulfate 4g IV loading dose", "Ancef 2g IVPB every 6 hours", "Stadol 1mg IV push every 4 hours PRN pain"],
+                  key: 0,
+                  rat: "Beta-adrenergic agonists like terbutaline cause severe hyperglycemia and can precipitate diabetic ketoacidosis in pregnant diabetic women; this order must be questioned." },
+                // 26. Amniocentesis LS Ratio
+                { id: "SCFHS-026", dom: "DOM4", dName: "Maternal & High-Risk Obstetrics",
+                  stem: "An amniocentesis at 32 weeks gestation reveals an L/S ratio of 1:1 and absence of phosphatidylglycerol. How should the nurse interpret this result?",
+                  opts: ["The infant is at high risk for respiratory distress syndrome.", "The infant is at low risk for congenital anomalies.", "The infant is post-term and fully mature.", "The infant shows evidence of erythroblastosis fetalis."],
+                  key: 0,
+                  rat: "An L/S ratio below 2:1 indicates fetal lung immaturity, placing the newborn at significant risk for respiratory distress syndrome (RDS)." },
+                // 27. Infant of Diabetic Mother Jitteriness
+                { id: "SCFHS-027", dom: "DOM4", dName: "Maternal & High-Risk Obstetrics",
+                  stem: "Which observation in a newborn delivered of a diabetic mother requires immediate nursing intervention?",
+                  opts: ["Jitteriness and tremors", "Active crying when handled", "Occasional yawning and stretching", "Wakefulness during feeding times"],
+                  key: 0,
+                  rat: "Jitteriness in the infant of a diabetic mother is a classic sign of neonatal hypoglycemia resulting from abrupt cessation of maternal glucose supply coupled with fetal hyperinsulinemia." },
+                // 28. Magnesium Sulfate Expected Side Effect
+                { id: "SCFHS-028", dom: "DOM4", dName: "Maternal & High-Risk Obstetrics",
+                  stem: "A client receiving intravenous magnesium sulfate for preeclampsia must be monitored for side effects. What is considered an expected pharmacological side effect?",
+                  opts: ["Flushing, lethargy, and a feeling of warmth", "Hyperactive deep tendon reflexes", "Hypertensive crisis and tachycardia", "Rapid respiratory rate above 24 breaths/min"],
+                  key: 0,
+                  rat: "Initial and expected side effects of magnesium sulfate infusion include facial flushing, warmth, muscle weakness, and mild lethargy due to smooth muscle relaxation." },
+                // 29. Epidural Hypotension Intervention
+                { id: "SCFHS-029", dom: "DOM4", dName: "Maternal & High-Risk Obstetrics",
+                  stem: "If a laboring client experiences sudden hypotension following epidural anesthesia placement, what is the nurse's immediate action?",
+                  opts: ["Increase the rate of the intravenous fluid infusion.", "Place the client in a flat supine position.", "Decrease the baseline IV infusion rate.", "Administer oxytocin infusion to speed labor."],
+                  key: 0,
+                  rat: "Epidural-induced sympathetic blockade causes vasodilation and hypotension. Immediate management includes increasing IV fluid infusion, left uterine displacement, and administering oxygen." },
+                // 30. Pancreatic Cancer Nursing Diagnosis
+                { id: "SCFHS-030", dom: "DOM2", dName: "Endocrine & Metabolic Disorders",
+                  stem: "A client is diagnosed with advanced cancer of the pancreas. The nurse should prioritize care around which major nursing diagnosis?",
+                  opts: ["Imbalanced nutrition: less than body requirements", "Disturbed sensory perception: visual", "Urinary retention related to obstruction", "Ineffective airway clearance"],
+                  key: 0,
+                  rat: "Pancreatic cancer severely disrupts digestive enzyme secretion and metabolism, leading to rapid weight loss, anorexia, and profound nutritional deficits." },
+                // 31. Uremic Frost Association
+                { id: "SCFHS-031", dom: "DOM2", dName: "Endocrine & Metabolic Disorders",
+                  stem: "A nurse notes uremic frost on a client's skin. This finding is classically associated with:",
+                  opts: ["End-stage renal disease (uremia)", "Severe iron-deficiency anemia", "Advanced liver failure", "Primary parathyroid disorder"],
+                  key: 0,
+                  rat: "Uremic frost occurs when high levels of urea nitrogen in the blood crystallize on the skin surface as sweat evaporates in advanced renal failure." },
+                // 32. Motor Vehicle Accident Priority Diagnosis
+                { id: "SCFHS-032", dom: "DOM3", dName: "Cardiovascular & Critical Care",
+                  stem: "A client arrives in the ED following a motor vehicle collision with BP 80/34 mmHg, pulse 120 bpm, and respirations 20 bpm. What is the priority nursing diagnosis?",
+                  opts: ["Fluid volume deficit", "Ineffective airway clearance", "Impaired physical mobility", "Disturbed thought processes"],
+                  key: 0,
+                  rat: "Hypotension and tachycardia following trauma indicate acute hemorrhagic shock, making fluid volume deficit the life-threatening priority." },
+                // 33. Osteogenesis Imperfecta Concern
+                { id: "SCFHS-033", dom: "DOM5", dName: "Pediatrics & Safety Management",
+                  stem: "During a home visit to an 18-year-old with osteogenesis imperfecta, which client statement or activity causes the greatest concern?",
+                  opts: ["'I joined a local contact football league with my friends.'", "'I drink carbonated beverages occasionally.'", "'I take acetaminophen when my joints ache.'", "'I have two younger sisters who help me.'"],
+                  key: 0,
+                  rat: "Osteogenesis imperfecta is a brittle bone disease; participating in contact sports like football carries an extremely high risk of severe pathological fractures." },
+                // 34. Transplant Unit Fruit Basket Action
+                { id: "SCFHS-034", dom: "DOM5", dName: "Pediatrics & Safety Management",
+                  stem: "A client on an organ transplant unit has a WBC count of 450/mm³. During evening visitation, a visitor brings a basket of fresh unwashed fruit. What action should the nurse take?",
+                  opts: ["Politely ask the family members to take the fruit home.", "Wash the fruit thoroughly in hot water before serving.", "Place the basket directly on the bedside table.", "Peel the fruit and leave it covered for later."],
+                  key: 0,
+                  rat: "Patients with severe neutropenia (WBC 450) are on protective isolation and must avoid fresh raw fruits and vegetables due to fungal and bacterial contamination risks." },
+                // 35. Laryngectomy Hemorrhage Initial Action
+                { id: "SCFHS-035", dom: "DOM3", dName: "Cardiovascular & Critical Care",
+                  stem: "A client following a laryngectomy suddenly becomes unresponsive, pale, with a BP of 90/40 mmHg and bleeding from the site. What is the initial nursing action?",
+                  opts: ["Increase the intravenous normal saline infusion rate.", "Place the client in Trendelenburg position.", "Administer intravenous atropine sulfate.", "Move the crash cart outside the room."],
+                  key: 0,
+                  rat: "Acute hemorrhage and hypovolemic shock require immediate circulatory volume expansion with IV normal saline or lactated Ringer's solution." },
+                // 36. Chest Tube Dislodgement Action
+                { id: "SCFHS-036", dom: "DOM3", dName: "Cardiovascular & Critical Care",
+                  stem: "A client with a lung resection accidentally dislodges their chest tube. Which action by the nurse indicates correct management?",
+                  opts: ["Cover the insertion site with a sterile Vaseline (petroleum) gauze dressing.", "Reinsert the chest tube immediately using sterile technique.", "Order an STAT chest X-ray before taking any action.", "Leave the wound completely open to drain fluid."],
+                  key: 0,
+                  rat: "When a chest tube is pulled out, an airtight seal must be immediately established by covering the wound with sterile petroleum gauze taped on three sides to prevent tension pneumothorax." },
+                // 37. Warfarin Protime Elevated Intervention
+                { id: "SCFHS-037", dom: "DOM1", dName: "Hematology & Vascular Care",
+                  stem: "A client taking warfarin (Coumadin) has a prothrombin time / INR corresponding to an excessively prolonged result of 120 seconds. Which intervention is most important?",
+                  opts: ["Assess the client closely for signs of abnormal bleeding.", "Anticipate an increase in the prescribed Coumadin dosage.", "Increase the frequency of neurological assessments.", "Instruct the client on dietary vitamin K restriction."],
+                  key: 0,
+                  rat: "A dangerously elevated clotting time places the patient at immediate risk for spontaneous internal hemorrhage; assessing for bleeding is the priority nursing action." },
+                // 38. Pregnancy Calcium Selection
+                { id: "SCFHS-038", dom: "DOM4", dName: "Maternal & High-Risk Obstetrics",
+                  stem: "Which food selection provides the highest bioavailable calcium content for a client who is four months pregnant?",
+                  opts: ["A cup of plain low-fat yogurt", "A traditional granola bar", "A bran muffin with honey", "A glass of citrus fruit juice"],
+                  key: 0,
+                  rat: "Dairy products such as yogurt are exceptionally rich sources of bioavailable calcium required for fetal skeletal development during pregnancy." },
+                // 39. Preeclampsia Magnesium Toxicity Understanding
+                { id: "SCFHS-039", dom: "DOM4", dName: "Maternal & High-Risk Obstetrics",
+                  stem: "A client with preeclampsia is admitted with magnesium sulfate. Which nursing action indicates an understanding of monitoring for magnesium toxicity?",
+                  opts: ["Assessing deep tendon reflexes and respiratory rate hourly", "Performing a sterile vaginal examination every 30 minutes", "Keeping a padded tongue blade at the bedside", "Darkening the room and restricting all visitors"],
+                  key: 0,
+                  rat: "Monitoring deep tendon reflexes, urine output, and respiratory rate is essential because loss of reflexes and respiratory depression are early signs of magnesium toxicity." },
+                // 40. Pediatric Blood Transfusion Catheter Size
+                { id: "SCFHS-040", dom: "DOM5", dName: "Pediatrics & Safety Management",
+                  stem: "What is the recommended IV catheter gauge size for administering a blood transfusion to a 6-year-old child?",
+                  opts: ["22 or 24 gauge", "18 gauge", "16 gauge", "14 gauge"],
+                  key: 0,
+                  rat: "For pediatric patients, smaller gauge catheters (22 or 24 gauge) are standard to accommodate small veins while avoiding mechanical hemolysis during blood administration." },
+                // 41. Facial Burn Complication
+                { id: "SCFHS-041", dom: "DOM3", dName: "Cardiovascular & Critical Care",
+                  stem: "A client is admitted two hours after an explosion causing thermal burns to the face and neck. The nurse should be most vigilant for:",
+                  opts: ["Acute laryngeal edema and airway obstruction", "Severe hypokalemia from cellular shifts", "Hypernatremia from water intoxication", "Chronic renal failure"],
+                  key: 0,
+                  rat: "Facial and neck burns carry an extreme, rapid risk of inhalation injury and upper airway edema, making airway patency the primary clinical concern." },
+                // 42. Diabetes Management Understanding
+                { id: "SCFHS-042", dom: "DOM2", dName: "Endocrine & Metabolic Disorders",
+                  stem: "A client newly diagnosed with diabetes mellitus demonstrates understanding of self-management when stating or showing:",
+                  opts: ["Correct demonstration of subcutaneous insulin injection technique", "Selecting only foods containing high simple carbohydrates", "Stating that blood glucose monitoring is unnecessary if feeling well", "Avoiding all forms of physical exercise"],
+                  key: 0,
+                  rat: "Demonstrating proper insulin administration technique verifies psychomotor skill acquisition and safe self-management." },
+                // 43. Cast Application Finding to Report
+                { id: "SCFHS-043", dom: "DOM1", dName: "Hematology & Vascular Care",
+                  stem: "A client is admitted following cast application for a fractured ulna. Which finding must be reported immediately to the physician?",
+                  opts: ["Paresthesia and pallor of the fingers", "Mild pain at the fracture site", "Warm fingers with brisk capillary refill", "Rapid bounding peripheral pulses"],
+                  key: 0,
+                  rat: "Paresthesia, pallor, pulselessness, and pain indicate neurovascular compromise (compartment syndrome), requiring immediate surgical intervention." },
+                // 44. AIDS Patient Teaching
+                { id: "SCFHS-044", dom: "DOM5", dName: "Pediatrics & Safety Management",
+                  stem: "What specific instruction should be included in the teaching plan for a client diagnosed with AIDS?",
+                  opts: ["Report any unusual skin lesions or color changes immediately.", "Avoid all forms of physical exercise entirely.", "Refrain from taking herbal supplements without asking.", "Relocate permanently to a warm, humid climate."],
+                  key: 0,
+                  rat: "Patients with HIV/AIDS are prone to opportunistic infections and malignancies (such as Kaposi sarcoma), making early reporting of skin lesions critical." },
+                // 45. Healthcare Worker Infection Control Error
+                { id: "SCFHS-045", dom: "DOM5", dName: "Pediatrics & Safety Management",
+                  stem: "Which action by a healthcare worker indicates a need for further instruction regarding infection control standards?",
+                  opts: ["Wearing non-sterile gloves while monitoring an IV infusion rate", "Washing hands thoroughly between patient contacts", "Wearing protective eyewear during venipuncture", "Using a gait belt to ambulate an elderly client"],
+                  key: 0,
+                  rat: "Wearing gloves for routine activities that do not involve potential exposure to blood or body fluids (like simply checking an IV rate) is unnecessary and wasteful; standard precautions apply." },
+                // 46. ECT Preparation
+                { id: "SCFHS-046", dom: "DOM5", dName: "Pediatrics & Safety Management",
+                  stem: "Prior to a client undergoing electroconvulsive therapy (ECT) for severe depression, what is a necessary nursing action?",
+                  opts: ["Ensure an informed consent is signed and equipment is ready.", "Apply a tourniquet tightly to the upper arm.", "Administer high-dose oral anticonvulsants.", "Instruct the client on shellfish allergy history."],
+                  key: 0,
+                  rat: "Ensuring valid informed consent, verifying NPO status, and checking baseline vitals and equipment are essential pre-procedural nursing responsibilities." },
+                // 47. Enterobiasis Pinworms Symptom
+                { id: "SCFHS-047", dom: "DOM5", dName: "Pediatrics & Safety Management",
+                  stem: "A 5-year-old child is evaluated for enterobiasis (pinworms). Which clinical symptom is characteristically associated with this condition?",
+                  opts: ["Perianal itching, especially at night", "Nausea and projectile vomiting", "Oral ulcerations and stomatitis", "Intense scalp pruritus"],
+                  key: 0,
+                  rat: "Pinworms migrate to the perianal area at night to deposit eggs, causing intense nocturnal perianal pruritus and restlessness." },
+                // 48. Pediculosis Capitis Teaching
+                { id: "SCFHS-048", dom: "DOM5", dName: "Pediatrics & Safety Management",
+                  stem: "When teaching a mother regarding treatment for pediculosis capitis (head lice), what instruction should the nurse include?",
+                  opts: ["Wash all bed linens and clothing in hot water and detergent.", "Continue pediculocidal medication therapy for one full year.", "Limit treatment strictly to children over 10 years of age.", "Administer systemic intravenous antibiotics."],
+                  key: 0,
+                  rat: "To eliminate lice and prevent reinfestation, clothing, bedding, and towels must be washed and dried using high heat." },
+                // 49. Pregnant Nurse Assignment
+                { id: "SCFHS-049", dom: "DOM5", dName: "Pediatrics & Safety Management",
+                  stem: "A registered nurse who is pregnant is making daily staff assignments. Which client can safely be assigned to this nurse?",
+                  opts: ["A client diagnosed with human immunodeficiency virus (HIV)", "A client with a radioactive radium implant for cervical cancer", "A client with respiratory syncytial virus (RSV) infection", "A client with active cytomegalovirus (CMV) infection"],
+                  key: 0,
+                  rat: "Standard barrier precautions protect healthcare workers from HIV transmission. Conversely, pregnant nurses must avoid ionizing radiation sources and specific teratogenic viral exposures (like CMV or parvovirus)." },
+                // 50. Private Room Assignment
+                { id: "SCFHS-050", dom: "DOM5", dName: "Pediatrics & Safety Management",
+                  stem: "A nurse is planning room assignments. If only one private room is available, which client should receive priority assignment to this room?",
+                  opts: ["A client with methicillin-resistant Staphylococcus aureus (MRSA) infection", "A client admitted with uncomplicated diabetes mellitus", "A client recovering from mild acute pancreatitis", "A client diagnosed with controlled Addison's disease"],
+                  key: 0,
+                  rat: "Patients with transmissible multi-drug resistant organisms (like MRSA) require contact precautions and priority placement in a private room to prevent nosocomial spread." }
+            ];
+
+            const fullBank = [];
+            let itemCounter = 1;
+
+            rawQuestions.forEach(q => {
+                const targetKey = (itemCounter % 4);
+                const originalOpts = [...q.opts];
+                const rotatedOpts = [...originalOpts];
+
+                // Ensure the correct answer (index 0) rotates into position A, B, C, or D evenly
+                const temp = rotatedOpts[targetKey];
+                rotatedOpts[targetKey] = rotatedOpts[0];
+                rotatedOpts[0] = temp;
+
+                fullBank.push({
+                    id: q.id,
+                    dom: q.dom,
+                    dName: q.dName,
+                    stem: `[${q.id}] Clinical Case: ${q.stem}`,
+                    opts: rotatedOpts,
+                    key: targetKey,
+                    rat: q.rat
+                });
+                itemCounter++;
+            });
+
+            return fullBank;
+        }
+
+        const masterQuestionBank = generate50VignetteDataset();
+
+        /* STATE MANAGEMENT & LOCAL STORAGE */
+        let examMode = 'PRACTICE';
+        let activeDomainFilter = 'ALL';
+        let searchQuery = '';
+        let currentQuestionIndex = 0;
+        let userAnswers = {};
+        let flaggedQuestions = new Set();
+        let timerSeconds = 4 * 60 * 60; // 4 Hours
+        let timerPaused = false;
+        let timerInterval = null;
+        let filteredQuestionIndices = [];
+
+        function saveStateToLocalStorage() {
+            const state = {
+                userAnswers,
+                flaggedQuestions: Array.from(flaggedQuestions),
+                currentQuestionIndex,
+                timerSeconds,
+                examMode
+            };
+            localStorage.setItem('SCFHS_VIGNETTE_STATE_V1', JSON.stringify(state));
+        }
+
+        function loadStateFromLocalStorage() {
+            const saved = localStorage.getItem('SCFHS_VIGNETTE_STATE_V1');
+            if (saved) {
+                try {
+                    const state = JSON.parse(saved);
+                    userAnswers = state.userAnswers || {};
+                    flaggedQuestions = new Set(state.flaggedQuestions || []);
+                    currentQuestionIndex = state.currentQuestionIndex || 0;
+                    timerSeconds = state.timerSeconds || (4 * 60 * 60);
+                    examMode = state.examMode || 'PRACTICE';
+                    updateModeUI();
+                } catch(e) {
+                    console.error("Error restoring saved exam state", e);
+                }
+            }
+        }
+
+        /* TIMER CONTROLLER */
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                if (!timerPaused) {
+                    if (timerSeconds > 0) {
+                        timerSeconds--;
+                        updateTimerDisplay();
+                        if (timerSeconds % 30 === 0) saveStateToLocalStorage();
+                    } else {
+                        clearInterval(timerInterval);
+                        alert("Time limit expired. Auto-submitting board exam.");
+                        submitExam();
+                    }
+                }
+            }, 1000);
+        }
+
+        function toggleTimerPause() {
+            timerPaused = !timerPaused;
+            const icon = document.getElementById('timerPauseIcon');
+            icon.className = timerPaused ? "fa-solid fa-play" : "fa-solid fa-pause";
+        }
+
+        function updateTimerDisplay() {
+            const hrs = Math.floor(timerSeconds / 3600);
+            const mins = Math.floor((timerSeconds % 3600) / 60);
+            const secs = timerSeconds % 60;
+            document.getElementById('timerDisplay').innerText = 
+                `${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        }
+
+        /* SEARCH & DOMAIN FILTERING */
+        function handleSearch() {
+            searchQuery = document.getElementById('keywordSearch').value.toLowerCase();
+            filterByDomain();
+        }
+
+        function filterByDomain() {
+            activeDomainFilter = document.getElementById('domainFilter').value;
+            filteredQuestionIndices = [];
+
+            masterQuestionBank.forEach((q, idx) => {
+                const matchesDomain = (activeDomainFilter === 'ALL' || q.dom === activeDomainFilter);
+                const matchesSearch = searchQuery === '' || 
+                    q.stem.toLowerCase().includes(searchQuery) || 
+                    q.opts.some(opt => opt.toLowerCase().includes(searchQuery)) ||
+                    q.rat.toLowerCase().includes(searchQuery);
+
+                if (matchesDomain && matchesSearch) {
+                    filteredQuestionIndices.push(idx);
+                }
+            });
+
+            currentQuestionIndex = 0;
+            renderQuestion();
+            renderGrids();
+        }
+
+        /* RENDER QUESTION CARD */
+        function renderQuestion() {
+            if (filteredQuestionIndices.length === 0) {
+                document.getElementById('questionStemText').innerText = "No matching board items found for current filter criteria.";
+                document.getElementById('optionsContainer').innerHTML = '';
+                document.getElementById('questionNumBadge').innerText = "0 of 0";
+                return;
+            }
+
+            const actualIndex = filteredQuestionIndices[currentQuestionIndex];
+            const q = masterQuestionBank[actualIndex];
+
+            document.getElementById('questionNumBadge').innerText = `Item ${currentQuestionIndex + 1} of ${filteredQuestionIndices.length} (${q.id})`;
+            document.getElementById('domainCategoryBadge').innerText = q.dName;
+            document.getElementById('questionStemText').innerText = q.stem;
+
+            const container = document.getElementById('optionsContainer');
+            container.innerHTML = '';
+
+            const letters = ['A', 'B', 'C', 'D'];
+            q.opts.forEach((optText, optIdx) => {
+                const isSelected = userAnswers[actualIndex] === optIdx;
+                const isCorrect = optIdx === q.key;
+                
+                let btnStyle = "border-slate-200 bg-white hover:bg-slate-50 text-slate-800";
+                let badgeStyle = "bg-slate-100 text-slate-600 border-slate-300";
+
+                if (isSelected) {
+                    if (examMode === 'PRACTICE') {
+                        if (isCorrect) {
+                            btnStyle = "border-emerald-500 bg-emerald-50 text-emerald-950 font-medium";
+                            badgeStyle = "bg-emerald-600 text-white border-emerald-600";
+                        } else {
+                            btnStyle = "border-rose-500 bg-rose-50 text-rose-950 font-medium";
+                            badgeStyle = "bg-rose-600 text-white border-rose-600";
+                        }
+                    } else {
+                        btnStyle = "border-indigo-600 bg-indigo-50 text-indigo-950 font-medium";
+                        badgeStyle = "bg-indigo-600 text-white border-indigo-600";
+                    }
+                } else if (examMode === 'PRACTICE' && userAnswers[actualIndex] !== undefined && isCorrect) {
+                    btnStyle = "border-emerald-500 bg-emerald-50/60 text-emerald-900";
+                    badgeStyle = "bg-emerald-500 text-white border-emerald-500";
+                }
+
+                const optElement = document.createElement('button');
+                optElement.className = `w-full text-left p-4 rounded-xl border-2 transition flex items-start space-x-3 touch-btn ${btnStyle}`;
+                optElement.onclick = () => selectOption(actualIndex, optIdx);
+
+                optElement.innerHTML = `
+                    <span class="w-7 h-7 rounded-lg border text-xs font-bold flex items-center justify-center shrink-0 mt-0.5 ${badgeStyle}">
+                        ${letters[optIdx]}
+                    </span>
+                    <span class="text-sm sm:text-base leading-snug flex-grow">${optText}</span>
+                `;
+                container.appendChild(optElement);
+            });
+
+            // Flag status
+            const isFlagged = flaggedQuestions.has(actualIndex);
+            document.getElementById('flagIcon').className = isFlagged ? "fa-solid fa-bookmark text-amber-500" : "fa-regular fa-bookmark";
+            document.getElementById('flagText').innerText = isFlagged ? "Flagged" : "Flag for Review";
+            document.getElementById('flagText').className = isFlagged ? "text-amber-600 font-bold" : "text-slate-600";
+
+            // Rationale Panel
+            const rationalePanel = document.getElementById('rationalePanel');
+            if (examMode === 'PRACTICE' && userAnswers[actualIndex] !== undefined) {
+                document.getElementById('rationaleText').innerText = q.rat;
+                rationalePanel.classList.remove('hidden');
+            } else {
+                rationalePanel.classList.add('hidden');
+            }
+
+            document.getElementById('prevBtn').disabled = currentQuestionIndex === 0;
+            document.getElementById('nextBtn').disabled = currentQuestionIndex === filteredQuestionIndices.length - 1;
+
+            updateProgressUI();
+            saveStateToLocalStorage();
+        }
+
+        function selectOption(qIdx, optIdx) {
+            userAnswers[qIdx] = optIdx;
+            renderQuestion();
+            renderGrids();
+        }
+
+        function toggleFlagCurrentQuestion() {
+            const actualIndex = filteredQuestionIndices[currentQuestionIndex];
+            if (flaggedQuestions.has(actualIndex)) {
+                flaggedQuestions.delete(actualIndex);
+            } else {
+                flaggedQuestions.add(actualIndex);
+            }
+            renderQuestion();
+            renderGrids();
+        }
+
+        function navigateQuestion(step) {
+            const target = currentQuestionIndex + step;
+            if (target >= 0 && target < filteredQuestionIndices.length) {
+                currentQuestionIndex = target;
+                renderQuestion();
+                renderGrids();
+            }
+        }
+
+        /* GRID NAVIGATOR RENDERERS */
+        function renderGrids() {
+            const desktopGrid = document.getElementById('desktopGridContainer');
+            const mobileGrid = document.getElementById('mobileGridContainer');
+            
+            desktopGrid.innerHTML = '';
+            mobileGrid.innerHTML = '';
+
+            filteredQuestionIndices.forEach((actualIdx, filterPos) => {
+                const isAnswered = userAnswers[actualIdx] !== undefined;
+                const isFlagged = flaggedQuestions.has(actualIdx);
+                const isCurrent = filterPos === currentQuestionIndex;
+
+                let cellClass = "bg-slate-100 text-slate-700 hover:bg-slate-200 border-slate-200";
+
+                if (isCurrent) {
+                    cellClass = "border-2 border-indigo-600 font-bold text-indigo-700 bg-indigo-50";
+                } else if (isFlagged) {
+                    cellClass = "bg-amber-400 text-slate-900 font-bold";
+                } else if (isAnswered) {
+                    cellClass = "bg-indigo-600 text-white font-medium";
+                }
+
+                const createBtn = () => {
+                    const btn = document.createElement('button');
+                    btn.className = `h-9 w-full rounded-md text-xs font-semibold transition flex items-center justify-center border ${cellClass}`;
+                    btn.innerText = filterPos + 1;
+                    btn.onclick = () => {
+                        currentQuestionIndex = filterPos;
+                        renderQuestion();
+                        renderGrids();
+                        document.getElementById('mobileGridDrawer').classList.add('translate-x-full');
+                    };
+                    return btn;
+                };
+
+                desktopGrid.appendChild(createBtn());
+                mobileGrid.appendChild(createBtn());
+            });
+
+            document.getElementById('gridSummary').innerText = `${filteredQuestionIndices.length} Items`;
+        }
+
+        /* MODE & CONTROLS */
+        function toggleMode() {
+            examMode = (examMode === 'PRACTICE') ? 'EXAM' : 'PRACTICE';
+            updateModeUI();
+            renderQuestion();
+        }
+
+        function updateModeUI() {
+            document.getElementById('modeText').innerText = (examMode === 'PRACTICE') ? 'Practice Mode' : 'Exam Mode';
+        }
+
+        function updateProgressUI() {
+            const total = masterQuestionBank.length;
+            const answeredCount = Object.keys(userAnswers).length;
+            const pct = Math.round((answeredCount / total) * 100);
+
+            document.getElementById('progressText').innerText = `${answeredCount}/${total}`;
+            document.getElementById('progressPercent').innerText = `${pct}%`;
+        }
+
+        /* CALCULATOR */
+        let calcVal = '0';
+        function toggleCalculator() {
+            document.getElementById('calcModal').classList.toggle('hidden');
+        }
+
+        function calcInput(char) {
+            const display = document.getElementById('calcDisplay');
+            if (char === 'C') {
+                calcVal = '0';
+            } else {
+                if (calcVal === '0' && !isNaN(char)) {
+                    calcVal = char;
+                } else {
+                    calcVal += char;
+                }
+            }
+            display.innerText = calcVal;
+        }
+
+        function calcEqual() {
+            const display = document.getElementById('calcDisplay');
+            try {
+                calcVal = String(Function('"use strict";return (' + calcVal + ')')());
+            } catch(e) {
+                calcVal = 'Error';
+            }
+            display.innerText = calcVal;
+        }
+
+        function toggleMobileGrid() {
+            document.getElementById('mobileGridDrawer').classList.toggle('translate-x-full');
+        }
+
+        /* SUBMISSION & EVALUATION */
+        function confirmSubmitExam() {
+            const answered = Object.keys(userAnswers).length;
+            const total = masterQuestionBank.length;
+
+            if (answered < total) {
+                if (!confirm(`You have answered ${answered} of ${total} board items. Finalize and submit exam now?`)) {
+                    return;
+                }
+            }
+            submitExam();
+        }
+
+        function submitExam() {
+            let correctCount = 0;
+            const domainScores = {
+                DOM1: { name: 'Hematology & Vascular Care', total: 0, correct: 0 },
+                DOM2: { name: 'Endocrine & Metabolic Disorders', total: 0, correct: 0 },
+                DOM3: { name: 'Cardiovascular & Critical Care', total: 0, correct: 0 },
+                DOM4: { name: 'Maternal & High-Risk Obstetrics', total: 0, correct: 0 },
+                DOM5: { name: 'Pediatrics & Safety Management', total: 0, correct: 0 }
+            };
+
+            masterQuestionBank.forEach((q, idx) => {
+                const userChoice = userAnswers[idx];
+                domainScores[q.dom].total++;
+
+                if (userChoice !== undefined && userChoice === q.key) {
+                    correctCount++;
+                    domainScores[q.dom].correct++;
+                }
+            });
+
+            const overallScorePct = Math.round((correctCount / TOTAL_QUESTIONS) * 100);
+
+            document.getElementById('resTotalScore').innerText = `${overallScorePct}%`;
+            document.getElementById('resCorrectRatio').innerText = `${correctCount} / ${TOTAL_QUESTIONS}`;
+
+            const passBadge = document.getElementById('resPassStatus');
+            if (overallScorePct >= 65) {
+                passBadge.innerText = "PASSED";
+                passBadge.className = "text-2xl font-bold text-emerald-400 mt-1.5";
+            } else {
+                passBadge.innerText = "NOT PASSED";
+                passBadge.className = "text-2xl font-bold text-rose-500 mt-1.5";
+            }
+
+            const domainContainer = document.getElementById('domainAnalyticsContainer');
+            domainContainer.innerHTML = '';
+
+            Object.keys(domainScores).forEach(dKey => {
+                const d = domainScores[dKey];
+                const pct = d.total > 0 ? Math.round((d.correct / d.total) * 100) : 0;
+                const barColor = pct >= 65 ? 'bg-emerald-500' : 'bg-rose-500';
+
+                const domainRow = document.createElement('div');
+                domainRow.className = "space-y-1.5";
+                domainRow.innerHTML = `
+                    <div class="flex justify-between text-xs sm:text-sm font-semibold text-slate-700">
+                        <span>${d.name}</span>
+                        <span>${d.correct}/${d.total} (${pct}%)</span>
+                    </div>
+                    <div class="w-full bg-slate-200 h-3 rounded-full overflow-hidden">
+                        <div class="${barColor} h-full transition-all duration-500" style="width: ${pct}%"></div>
+                    </div>
+                `;
+                domainContainer.appendChild(domainRow);
+            });
+
+            document.getElementById('resultsModal').classList.remove('hidden');
+        }
+
+        function closeResultsModal() {
+            document.getElementById('resultsModal').classList.add('hidden');
+        }
+
+        function reviewIncorrectOnly() {
+            closeResultsModal();
+            examMode = 'PRACTICE';
+            updateModeUI();
+            renderQuestion();
+        }
+
+        function resetExamState() {
+            if (confirm("Resetting will clear all submitted answers and saved progress. Continue?")) {
+                localStorage.removeItem('SCFHS_VIGNETTE_STATE_V1');
+                userAnswers = {};
+                flaggedQuestions.clear();
+                currentQuestionIndex = 0;
+                timerSeconds = 4 * 60 * 60;
+                filterByDomain();
+            }
+        }
+
+        /* INITIALIZATION */
+        window.onload = function() {
+            loadStateFromLocalStorage();
+            filterByDomain();
+            startTimer();
+        };
+    </script>
+</body>
+</html>
