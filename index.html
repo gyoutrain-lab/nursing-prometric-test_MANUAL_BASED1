@@ -72,7 +72,7 @@
         <section class="lg:col-span-3 bg-white p-6 md:p-8 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between">
             <div id="question-container">
                 <div class="flex justify-between items-center mb-6">
-                    <span id="question-badge" class="bg-teal-50 text-teal-700 text-xs font-bold px-3 py-1 rounded-full border border-teal-200">Domain</span>
+                    <span id="question-badge" class="bg-teal-50 text-teal-700 text-xs font-bold px-3 py-1 rounded-full border border-teal-200">Category</span>
                     <span id="question-number-indicator" class="text-sm font-semibold text-slate-400">Question 1</span>
                 </div>
                 
@@ -110,10 +110,11 @@
         </div>
     </footer>
 
-  <!-- Embedded Master Question Bank -->
+    <!-- Embedded Master Question Bank & Logic Script -->
     <script>
+        // Database Soal (Memuat 150 soal sesuai data asli Anda)
         const questionBank = [
-     {
+            {
     "id": 1,
     "category": "Fundamental Nursing, Procedures & Critical Care",
     "question": "A nurse is providing education on post-operative positioning to prevent complications. Which position is most appropriate for a patient who has just undergone a craniotomy?",
@@ -2103,15 +2104,16 @@
 
         function loadQuestion(index) {
             const q = questionBank[index];
-            document.getElementById('question-badge').innerText = `Domain: ${q.domain}`;
+            document.getElementById('question-badge').innerText = `Category: ${q.category}`;
             document.getElementById('question-number-indicator').innerText = `Question ${index + 1} of ${questionBank.length}`;
             document.getElementById('question-text').innerText = q.question;
             
             const optContainer = document.getElementById('options-container');
             optContainer.innerHTML = '';
 
-            q.options.forEach((opt, optIdx) => {
-                const isSelected = userAnswers[index] === optIdx;
+            // PERBAIKAN UTAMA: Menggunakan Object.entries karena options berbentuk Objek Key-Value (A, B, C, D)
+            Object.entries(q.options).forEach(([key, value]) => {
+                const isSelected = userAnswers[index] === key;
                 const label = document.createElement('label');
                 label.className = `flex items-start p-4 rounded-xl border cursor-pointer transition-all ${
                     isSelected 
@@ -2120,8 +2122,8 @@
                 }`;
                 
                 label.innerHTML = `
-                    <input type="radio" name="question-opt" value="${optIdx}" ${isSelected ? 'checked' : ''} class="mt-1 mr-3 text-teal-600 h-4 w-4" onchange="selectAnswer(${index}, ${optIdx})">
-                    <span class="text-sm text-slate-700 leading-relaxed">${opt}</span>
+                    <input type="radio" name="question-opt" value="${key}" ${isSelected ? 'checked' : ''} class="mt-1 mr-3 text-teal-600 h-4 w-4" onchange="selectAnswer(${index}, '${key}')">
+                    <span class="text-sm text-slate-700 leading-relaxed"><strong class="mr-2">${key}.</strong> ${value}</span>
                 `;
                 optContainer.appendChild(label);
             });
@@ -2129,7 +2131,7 @@
             const rationalBox = document.getElementById('rational-box');
             if (userAnswers[index] !== undefined) {
                 rationalBox.classList.remove('hidden');
-                document.getElementById('rational-text').innerText = q.rational;
+                document.getElementById('rational-text').innerText = q.rationale;
             } else {
                 rationalBox.classList.add('hidden');
             }
@@ -2137,8 +2139,8 @@
             renderGrid();
         }
 
-        function selectAnswer(qIdx, optIdx) {
-            userAnswers[qIdx] = optIdx;
+        function selectAnswer(qIdx, optKey) {
+            userAnswers[qIdx] = optKey;
             loadQuestion(qIdx);
             updateStats();
         }
@@ -2164,7 +2166,15 @@
         }
 
         function submitExam() {
-            alert("Exam submitted successfully!");
+            if(confirm("Are you sure you want to submit your exam?")) {
+                let score = 0;
+                questionBank.forEach((q, idx) => {
+                    if(userAnswers[idx] === q.answer) {
+                        score++;
+                    }
+                });
+                alert(`Exam submitted successfully!\nYour Score: ${score} out of ${questionBank.length}`);
+            }
         }
 
         function startTimer(duration) {
